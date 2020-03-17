@@ -10,17 +10,29 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.common.internal.safeparcel.SafeParcelable;
+import com.pixplicity.easyprefs.library.Prefs;
+
+import co.rapigo.JobIntentService.models.ParametersService;
+import co.rapigo.JobIntentService.services.GpsService;
+import co.rapigo.JobIntentService.utils.Constantes;
+
 public class MainActivity extends AppCompatActivity {
 
-    private EditText editTextInput;
+    private EditText editTextDevice;
+    private EditText editTextFastedInterval;
+    private EditText editTextUpdateInterval;
     private int ACCESS_FINE_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        editTextInput = findViewById(R.id.edit_text_input);
+        editTextDevice = findViewById(R.id.device);
+        editTextFastedInterval = findViewById(R.id.fasted_interval);
+        editTextUpdateInterval = findViewById(R.id.update_interval);
 
+        setData();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED ||
@@ -37,6 +49,26 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText( this, "Permisos ok" , Toast.LENGTH_LONG  ).show();
         }
+    }
+
+    public void setData(){
+        int FASTEST_INTERVAL_SECONDS = Prefs.getInt(Constantes.FASTEST_INTERVAL_SECONDS_KEY, Constantes.FASTEST_INTERVAL_SECONDS);
+        int UPDATE_INTERVAL_SECONDS = Prefs.getInt(Constantes.UPDATE_INTERVAL_SECONDS_KEY, Constantes.UPDATE_INTERVAL_SECONDS);
+        String TOKEN_DEVICE = Prefs.getString(Constantes.TOKEN_DEVICE_KEY, Constantes.TOKEN_DEVICE);
+
+        editTextDevice.setText(TOKEN_DEVICE);
+        editTextFastedInterval.setText("" + FASTEST_INTERVAL_SECONDS);
+        editTextUpdateInterval.setText("" + UPDATE_INTERVAL_SECONDS);
+    }
+
+    public ParametersService saveData(){
+        String tokenDevice = editTextDevice.getText().toString();
+        int fastedInterval = Integer.valueOf(editTextFastedInterval.getText().toString());
+        int updateInterval = Integer.valueOf(editTextUpdateInterval.getText().toString());
+
+        ParametersService pS = new ParametersService(tokenDevice, fastedInterval, updateInterval);
+        pS.save();
+        return pS;
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -62,10 +94,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startService(View v) {
-        String input = editTextInput.getText().toString();
+
+        ParametersService pS = saveData();
 
         Intent serviceIntent = new Intent(this, GpsService.class);
-        serviceIntent.putExtra("inputExtra", input);
+        serviceIntent.putExtra("parameters", pS);
 
         startService(serviceIntent);
     }

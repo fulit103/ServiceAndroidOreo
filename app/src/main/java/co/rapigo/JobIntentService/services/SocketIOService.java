@@ -1,4 +1,4 @@
-package co.rapigo.JobIntentService;
+package co.rapigo.JobIntentService.services;
 
 import android.app.Service;
 import android.content.Intent;

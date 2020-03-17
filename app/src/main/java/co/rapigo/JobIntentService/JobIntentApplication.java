@@ -4,10 +4,12 @@ import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.ContextWrapper;
 import android.os.Build;
 
 import com.google.firebase.FirebaseApp;
 import com.onesignal.OneSignal;
+import com.pixplicity.easyprefs.library.Prefs;
 
 public class JobIntentApplication extends Application {
 
@@ -18,6 +20,13 @@ public class JobIntentApplication extends Application {
         super.onCreate();
 
         //FirebaseApp.initializeApp(JobIntentApplication.this);
+
+        new Prefs.Builder()
+                .setContext(this)
+                .setMode(ContextWrapper.MODE_PRIVATE)
+                .setPrefsName(getPackageName())
+                .setUseDefaultSharedPreference(true)
+                .build();
 
         OneSignal.startInit(this)
                 .unsubscribeWhenNotificationsAreDisabled(true)

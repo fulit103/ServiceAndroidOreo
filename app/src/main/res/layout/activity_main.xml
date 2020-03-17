@@ -5,10 +5,38 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".MainActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Device" />
+
     <EditText
-        android:id="@+id/edit_text_input"
+        android:id="@+id/device"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Input"></EditText>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update interval" />
+
+    <EditText
+        android:id="@+id/update_interval"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Input"></EditText>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fasted Interval" />
+
+    <EditText
+        android:id="@+id/fasted_interval"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Input"></EditText>
